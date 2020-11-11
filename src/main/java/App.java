@@ -30,7 +30,8 @@ public class App {
                 System.out.println("Podaj wiek");
                 int age = scanner.nextInt();
                 Guest newGuest = new Guest(name, lastName, age);
-                System.out.println("Utworzono gościa: " + name + " " + lastName);
+                String guestInfo = String.format("Utworzono gościa: %s %s (%d)", newGuest.firstName, newGuest.lastName, newGuest.age);
+                System.out.println(guestInfo);
 
             } catch (Exception e) {
                 System.err.println("Niepoprawne dane");
@@ -44,7 +45,8 @@ public class App {
                 System.out.println("Podaj ilość łóżek w pokoju");
                 int bedNumber = scanner.nextInt();
                 Room newRoom = new Room(number, bedNumber);
-                System.out.println("Utworzono pokój nr: " + number);
+                String roomInfo = String.format("Utworzono pokój nr: %d", newRoom.number);
+                System.out.println(roomInfo);
             } catch (Exception e) {
                 System.err.println("Nieprawidłowe dane");
                 e.printStackTrace();
