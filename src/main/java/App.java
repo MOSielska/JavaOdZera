@@ -52,7 +52,8 @@ public class App {
             String lastName = scanner.next();
             System.out.println("Podaj wiek");
             int age = scanner.nextInt();
-            Guest newGuest = new Guest(name, lastName, age);
+            Gender gender = getGender(scanner);
+            Guest newGuest = new Guest(name, lastName, age, gender);
             System.out.println(newGuest.getInfo());
             return newGuest;
 
@@ -68,9 +69,9 @@ public class App {
         try {
             System.out.println("Podaj numer pokoju");
             int number = scanner.nextInt();
-            System.out.println("Podaj ilość łóżek w pokoju");
-            int bedNumber = scanner.nextInt();
-            Room newRoom = new Room(number, bedNumber);
+            //System.out.println("Podaj ilość łóżek w pokoju");
+            BeedType bedType = getBedType(scanner);
+            Room newRoom = new Room(number, bedType);
             System.out.println(newRoom.getInfo());
             return newRoom;
         } catch (Exception e) {
@@ -79,4 +80,47 @@ public class App {
             return null;
         }
     }
+
+    private static BeedType getBedType(Scanner scanner) {
+
+        System.out.println("Oto dostępne typy łóżek:");
+        System.out.println("1 - single bed");
+        System.out.println("2 - dobble bed");
+        System.out.println("3 - king size bed");
+        System.out.println("Jake łóżko wybierasz?");
+
+        try {
+            int choice = scanner.nextInt();
+            if (choice == 1) return BeedType.SINGLE;
+            else if (choice == 2) return BeedType.DOBBLE;
+            else if (choice == 3) return BeedType.KING_SIZE;
+            else {
+                System.out.println("Niepoprawne dane");
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Niepoprawne dane");
+            e.printStackTrace();
+            return null;
+            }
+        }
+
+    private static Gender getGender(Scanner scanner) {
+        System.out.println("Wybierz płeć \n1 - żeńska \n2 - męska");
+
+        try {
+            int choice = scanner.nextInt();
+            if (choice == 1) return Gender.FEMALE;
+            else if (choice == 2) return Gender.MALE;
+            else {
+                System.out.println("Niepoprawne dane");
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Niepoprawne dane");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
