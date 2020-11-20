@@ -26,7 +26,7 @@ public class App {
         System.out.println("Wersja developerska: " + isDeveloperVerison);
     }
 
-    private static int getUserOption (Scanner scanner) {
+    private static int getUserOption(Scanner scanner) {
         System.out.println("Menu:");
         System.out.println("1 - Dodaj nowego gościa");
         System.out.println("2 - Dodaj nowy pokój");
@@ -64,14 +64,13 @@ public class App {
         }
     }
 
-    private static Room createNewRoom(Scanner scanner){
+    private static Room createNewRoom(Scanner scanner) {
         System.out.println("Wybrano opcję 2 - dodaj nowy pokój");
         try {
             System.out.println("Podaj numer pokoju");
             int number = scanner.nextInt();
-            //System.out.println("Podaj ilość łóżek w pokoju");
-            BeedType bedType = getBedType(scanner);
-            Room newRoom = new Room(number, bedType);
+            BeedType[] bedTypes = getBedTypes(scanner);
+            Room newRoom = new Room(number, bedTypes);
             System.out.println(newRoom.getInfo());
             return newRoom;
         } catch (Exception e) {
@@ -81,29 +80,43 @@ public class App {
         }
     }
 
-    private static BeedType getBedType(Scanner scanner) {
-
-        System.out.println("Oto dostępne typy łóżek:");
-        System.out.println("1 - single bed");
-        System.out.println("2 - dobble bed");
-        System.out.println("3 - king size bed");
-        System.out.println("Jake łóżko wybierasz?");
+    private static BeedType[] getBedTypes(Scanner scanner) {
 
         try {
-            int choice = scanner.nextInt();
-            if (choice == 1) return BeedType.SINGLE;
-            else if (choice == 2) return BeedType.DOBBLE;
-            else if (choice == 3) return BeedType.KING_SIZE;
-            else {
-                System.out.println("Niepoprawne dane");
-                return null;
+            System.out.println("Ile łóżek w pokoju?");
+            int quantity = scanner.nextInt();
+
+            BeedType bedTypes[] = new BeedType[quantity];
+
+            for (int i = 0; i < quantity; i++) {
+                System.out.println("Oto dostępne typy łóżek:");
+                System.out.println("1 - single bed");
+                System.out.println("2 - dobble bed");
+                System.out.println("3 - king size bed");
+                System.out.println("Jake łóżko wybierasz?");
+
+                BeedType tempBed;
+
+
+                int choice = scanner.nextInt();
+                if (choice == 1) tempBed = BeedType.SINGLE;
+                else if (choice == 2) tempBed = BeedType.DOBBLE;
+                else if (choice == 3) tempBed = BeedType.KING_SIZE;
+                else {
+                    System.out.println("Niepoprawne dane");
+                    tempBed = null;
+
+                }
+
+                bedTypes[i] = tempBed;
             }
+            return bedTypes;
         } catch (Exception e) {
             System.err.println("Niepoprawne dane");
             e.printStackTrace();
             return null;
-            }
         }
+    }
 
     private static Gender getGender(Scanner scanner) {
         System.out.println("Wybierz płeć \n1 - żeńska \n2 - męska");
