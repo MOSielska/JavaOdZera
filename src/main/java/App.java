@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
@@ -8,6 +9,21 @@ public class App {
 
         Scanner scanner = new Scanner(System.in);
 
+        try {
+            performAction(scanner);
+        } catch (WrongOptionException | OnlyNumberException e) {
+            System.out.println("Wystąpił błąd.");
+            System.out.println("Kod błędu: " + e.getErrorCode());
+            System.out.println("Komunikat błędu: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Niezany błąd");
+        } finally {
+            System.out.println("Koniec");
+        }
+    }
+
+    private static void performAction(Scanner scanner) {
+
         int option = getUserOption(scanner);
 
         if (option == 1) {
@@ -15,7 +31,7 @@ public class App {
         } else if (option == 2) {
             createNewRoom(scanner);
         } else {
-            System.out.println("Brak opcji");
+            throw new WrongOptionException("Wrong option in main menu");
         }
 
     }
@@ -36,9 +52,8 @@ public class App {
 
         try {
             option = scanner.nextInt();
-        } catch (Exception e) {
-            System.err.println("Niepoprawny wybór.");
-            e.printStackTrace();
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbersin getUserOption function");
         }
         return option;
     }
@@ -58,9 +73,7 @@ public class App {
             return newGuest;
 
         } catch (Exception e) {
-            System.err.println("Niepoprawne dane");
-            e.printStackTrace();
-            return null;
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in createNewGuest function");
         }
     }
 
@@ -69,24 +82,22 @@ public class App {
         try {
             System.out.println("Podaj numer pokoju");
             int number = scanner.nextInt();
-            BeedType[] bedTypes = getBedTypes(scanner);
+            BedType[] bedTypes = getBedTypes(scanner);
             Room newRoom = new Room(number, bedTypes);
             System.out.println(newRoom.getInfo());
             return newRoom;
-        } catch (Exception e) {
-            System.err.println("Nieprawidłowe dane");
-            e.printStackTrace();
-            return null;
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in createNewRoom function");
         }
     }
 
-    private static BeedType[] getBedTypes(Scanner scanner) {
+    private static BedType[] getBedTypes(Scanner scanner) {
 
         try {
             System.out.println("Ile łóżek w pokoju?");
             int quantity = scanner.nextInt();
 
-            BeedType bedTypes[] = new BeedType[quantity];
+            BedType bedTypes[] = new BedType[quantity];
 
             for (int i = 0; i < quantity; i++) {
                 System.out.println("Oto dostępne typy łóżek:");
@@ -95,26 +106,22 @@ public class App {
                 System.out.println("3 - king size bed");
                 System.out.println("Jake łóżko wybierasz?");
 
-                BeedType tempBed;
+                BedType tempBed;
 
 
                 int choice = scanner.nextInt();
-                if (choice == 1) tempBed = BeedType.SINGLE;
-                else if (choice == 2) tempBed = BeedType.DOBBLE;
-                else if (choice == 3) tempBed = BeedType.KING_SIZE;
+                if (choice == 1) tempBed = BedType.SINGLE;
+                else if (choice == 2) tempBed = BedType.DOBBLE;
+                else if (choice == 3) tempBed = BedType.KING_SIZE;
                 else {
-                    System.out.println("Niepoprawne dane");
-                    tempBed = null;
-
+                    throw new WrongOptionException("Wrong option in getBedType function");
                 }
 
                 bedTypes[i] = tempBed;
             }
             return bedTypes;
-        } catch (Exception e) {
-            System.err.println("Niepoprawne dane");
-            e.printStackTrace();
-            return null;
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in getBedTypes function");
         }
     }
 
@@ -126,13 +133,10 @@ public class App {
             if (choice == 1) return Gender.FEMALE;
             else if (choice == 2) return Gender.MALE;
             else {
-                System.out.println("Niepoprawne dane");
-                return null;
+                throw new WrongOptionException("Wrong choice in getGender function");
             }
-        } catch (Exception e) {
-            System.err.println("Niepoprawne dane");
-            e.printStackTrace();
-            return null;
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in getGender function");
         }
     }
 

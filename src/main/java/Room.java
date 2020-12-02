@@ -2,9 +2,9 @@ public class Room {
 
     private int number;
     private boolean isFree;
-    private BeedType[] bedType;
+    private BedType[] bedType;
 
-    public Room(int number, BeedType[] bedTypes) {
+    public Room(int number, BedType[] bedTypes) {
         this.number = number;
         this.bedType = bedTypes;
         this.isFree = true;
