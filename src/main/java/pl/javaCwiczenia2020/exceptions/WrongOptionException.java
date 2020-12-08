@@ -1,12 +1,14 @@
+package pl.javaCwiczenia2020.exceptions;
+
 public class WrongOptionException extends ReservationCustomException {
 
-    private int errorCode = 101;
+    private final int errorCode = 101;
 
     public WrongOptionException(String message) {
         super(message);
     }
 
-    int getErrorCode() {
+    public int getErrorCode() {
         return errorCode;
     }
 }

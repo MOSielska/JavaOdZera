@@ -1,19 +1,19 @@
+package pl.javaCwiczenia2020.domain.room;
+
 public class Room {
 
-    private int number;
-    private boolean isFree;
-    private BedType[] bedType;
+    private final int number;
+    private final BedType[] bedType;
 
-    public Room(int number, BedType[] bedTypes) {
+    Room(int number, BedType[] bedTypes) {
         this.number = number;
         this.bedType = bedTypes;
-        this.isFree = true;
     }
 
     public String getInfo() {
-        String info = "";
+        StringBuilder info = new StringBuilder();
         for (int i = 0; i < bedType.length; i++) {
-            info += ("\n" + (i + 1) + ": " + bedType[i]);
+            info.append("\n").append((i + 1)).append(bedType[i]);
         }
         return String.format("Utworzono pokój nr: %d \nz %d łóżkami:", this.number, this.bedType.length) + info;
     }

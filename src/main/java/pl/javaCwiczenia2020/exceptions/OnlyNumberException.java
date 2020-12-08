@@ -1,6 +1,8 @@
+package pl.javaCwiczenia2020.exceptions;
+
 public class OnlyNumberException extends ReservationCustomException {
 
-    private int errorCode = 102;
+    private final int errorCode = 102;
 
     public OnlyNumberException(String message) {
         super(message);

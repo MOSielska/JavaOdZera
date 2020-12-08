@@ -1,11 +1,13 @@
+package pl.javaCwiczenia2020.domain.guest;
+
 public class Guest {
 
-    private String firstName;
-    private String lastName;
-    private int age;
-    private Gender gender;
+    private final String firstName;
+    private final String lastName;
+    private final int age;
+    private final Gender gender;
 
-    public Guest(String fName, String lName, int nAge, Gender gender) {
+    Guest(String fName, String lName, int nAge, Gender gender) {
         this.firstName = fName;
         this.lastName = lName;
         this.age = nAge;
