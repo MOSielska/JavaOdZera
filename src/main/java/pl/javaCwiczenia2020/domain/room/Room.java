@@ -13,8 +13,22 @@ public class Room {
     public String getInfo() {
         StringBuilder info = new StringBuilder();
         for (int i = 0; i < bedType.length; i++) {
-            info.append("\n").append((i + 1)).append(bedType[i]);
+            info.append("\n").append((i + 1)).append(" ").append(bedType[i]);
         }
-        return String.format("Utworzono pokój nr: %d \nz %d łóżkami:", this.number, this.bedType.length) + info;
+        return String.format("Pokój nr: %d \nz %d łóżkami: ", this.number, this.bedType.length) + info;
+    }
+
+    public String toCSV() {
+
+        String [] bedTypesStringArray = new String[this.bedType.length];
+
+        int i = 0;
+        for (BedType bedType : this.bedType) {
+            bedTypesStringArray[i] = bedType.toString();
+            i++;
+        }
+        String bedTypesData = String.join("#", bedTypesStringArray);
+
+        return String.format("%d,%s%s", this.number, bedTypesData, System.getProperty("line.separator"));
     }
 }

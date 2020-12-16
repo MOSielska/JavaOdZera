@@ -2,6 +2,8 @@ package pl.javaCwiczenia2020.domain.room;
 
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
+import java.util.List;
+
 public class RoomService {
 
     private final RoomRepository repo = new RoomRepository();
@@ -24,6 +26,19 @@ public class RoomService {
             bedTypes[i] = tempBed;
 
         }
-            return repo.createNewRoom(number, bedTypes);
+            return this.repo.createNewRoom(number, bedTypes);
+    }
+
+    public List<Room> getRoomList() {
+
+        return this.repo.getAll();
+    }
+
+    public void saveAll() {
+        this.repo.saveAll();
+    }
+
+    public void readAll() {
+        this.repo.readAll();
     }
 }

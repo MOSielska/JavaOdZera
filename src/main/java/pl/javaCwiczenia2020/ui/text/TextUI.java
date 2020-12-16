@@ -5,6 +5,7 @@ import pl.javaCwiczenia2020.domain.guest.Guest;
 import pl.javaCwiczenia2020.domain.guest.GuestService;
 import pl.javaCwiczenia2020.domain.room.Room;
 import pl.javaCwiczenia2020.domain.room.RoomService;
+import pl.javaCwiczenia2020.domain.util.Properties;
 import pl.javaCwiczenia2020.exceptions.OnlyNumberException;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
@@ -25,7 +26,7 @@ public class TextUI {
             String lastName = scanner.next();
             System.out.println("Podaj wiek");
             int age = scanner.nextInt();
-            Gender gender = guestService.getGender(readGenderdata(scanner));
+            Gender gender = guestService.getGender(readGenderData(scanner));
             Guest newGuest = guestService.createNewGuest(name, lastName, age, gender);
             System.out.println(newGuest.getInfo());
         } catch (InputMismatchException e) {
@@ -35,7 +36,7 @@ public class TextUI {
 
     }
 
-    private boolean readGenderdata(Scanner scanner) {
+    private boolean readGenderData(Scanner scanner) {
         System.out.println("Wybierz płeć \n1 - żeńska \n2 - męska");
         try {
             int choice = scanner.nextInt();
@@ -87,14 +88,18 @@ public class TextUI {
 }
 
 
-    public void showSystemInfo(String hotelName, int systemVersion, boolean isDeveloperVerison) {
-        System.out.println("Witam w systemie rezerwacji dla hotelu " + hotelName);
-        System.out.println("Aktualna wersja systemu: " + systemVersion);
-        System.out.println("Wersja developerska: " + isDeveloperVerison);
+    public void showSystemInfo() {
+        System.out.println("Witam w systemie rezerwacji dla hotelu " + Properties.HOTEL_NAME);
+        System.out.println("Aktualna wersja systemu: " + Properties.SYSTEM_VERSION);
+        System.out.println("Wersja developerska: " + Properties.IS_DEVELOPER_VERSION);
     }
 
 
     public void showMainMenu(){
+
+        System.out.println("Ładowanie danych...");
+        this.guestService.readAll();
+        this.roomService.readAll();
         Scanner scanner = new Scanner(System.in);
 
         try {
@@ -105,21 +110,31 @@ public class TextUI {
             System.out.println("Komunikat błędu: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Niezany błąd");
-        } finally {
-            System.out.println("Koniec");
         }
     }
 
     private void performAction(Scanner scanner) {
 
-        int option = getUserOption(scanner);
+        int option = -1;
 
-        if (option == 1) {
-            readNewGuestData(scanner);
-        } else if (option == 2) {
-            readNewRoomData(scanner);
-        } else {
-            throw new WrongOptionException("Wrong option in main menu");
+        while(option!=0) {
+            option = getUserOption(scanner);
+
+            if (option == 1) {
+                readNewGuestData(scanner);
+            } else if (option == 2) {
+                readNewRoomData(scanner);
+            } else if (option == 3) {
+                displayGuestList();
+            } else if (option == 4) {
+                displayRoomList();
+            } else if (option == 0) {
+                System.out.println("Koniec");
+                this.guestService.saveAll();
+                this.roomService.saveAll();
+            } else {
+                throw new WrongOptionException("Wrong option in main menu");
+            }
         }
 
     }
@@ -128,6 +143,9 @@ public class TextUI {
         System.out.println("Menu:");
         System.out.println("1 - Dodaj nowego gościa");
         System.out.println("2 - Dodaj nowy pokój");
+        System.out.println("3 - Wypisz wszystkich gości");
+        System.out.println("4 - Wypisz pokoje");
+        System.out.println("0 - Wyjście z aplikacji. Zapis danych.");
         System.out.println("Podaj numer opcji z menu...");
 
         int option;
@@ -140,7 +158,20 @@ public class TextUI {
         return option;
     }
 
+    private void displayRoomList(){
 
+        for (Room room: roomService.getRoomList()) {
+            System.out.println(room.getInfo());
+        }
+    }
+
+    private void displayGuestList(){
+
+        for (Guest guest : guestService.getGuestList()) {
+            System.out.println(guest.getInfo());
+        }
+
+    }
 }
 
 
