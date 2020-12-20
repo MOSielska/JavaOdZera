@@ -17,7 +17,14 @@ public class RoomRepository {
 
     Room createNewRoom(int number, BedType[] bedTypes) {
 
-        Room newRoom = new Room(number, bedTypes);
+        Room newRoom = new Room(findNewId(), number, bedTypes);
+        roomList.add(newRoom);
+        return newRoom;
+    }
+
+    Room addExistingRoom(int id, int number, BedType[] bedTypes) {
+
+        Room newRoom = new Room(id, number, bedTypes);
         roomList.add(newRoom);
         return newRoom;
     }
@@ -51,13 +58,21 @@ public class RoomRepository {
 
         Path file = Paths.get((Properties.DIRECTORY_PATH).toString(), fileName);
 
+        if (!Files.exists(file)) {
+            return;
+        }
+
         try {
             String[] roomList = (Files.readString(file, StandardCharsets.UTF_8)).split(System.getProperty("line.separator"));
 
             for (String roomInfo : roomList) {
                 String[] roomData = roomInfo.split(",");
-                int number = Integer.parseInt(roomData[0]);
-                String bedTypes = roomData[1];
+                if((roomData[0] == null) || roomData[0].trim().isEmpty()) {
+                    continue;
+                }
+                int id = Integer.parseInt(roomData[0]);
+                int number = Integer.parseInt(roomData[1]);
+                String bedTypes = roomData[2];
                 String[] bedTypesStringList = bedTypes.split("#");
                 BedType[] bedTypesList = new BedType[bedTypesStringList.length];
                 int i = 0;
@@ -65,11 +80,46 @@ public class RoomRepository {
                     bedTypesList[i] = BedType.valueOf(bedType);
                     i++;
                 }
-                createNewRoom(number, bedTypesList);
+                addExistingRoom(id, number, bedTypesList);
             }
 
         } catch (IOException e) {
             throw new ReadWriteFileException(Properties.DIRECTORY_PATH.toString(), "read", "rooms file");
         }
     }
+
+    private int findNewId() {
+        int max = 0;
+
+        for (Room room : this.roomList) {
+            if (room.getId() > max) {
+                max = room.getId();
+            }
+        }
+        return max + 1;
+    }
+
+    void remove(int id) {
+
+        for (Room room : roomList) {
+            if (room.getId() == id) roomList.remove(room);
+        }
+    }
+
+    void edit(int id, int number, BedType[] bedTypes) {
+
+        this.remove(id);
+        this.addExistingRoom(id, number, bedTypes);
+
+    }
+
+    Room getRoomById(int id) {
+
+        Room foundRoom = null;
+        for (Room room : roomList) {
+            if (room.getId() == id) foundRoom = room;
+        }
+        return foundRoom;
+    }
+
 }

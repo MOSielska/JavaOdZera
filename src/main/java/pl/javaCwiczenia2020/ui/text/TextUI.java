@@ -3,12 +3,14 @@ package pl.javaCwiczenia2020.ui.text;
 import pl.javaCwiczenia2020.domain.guest.Gender;
 import pl.javaCwiczenia2020.domain.guest.Guest;
 import pl.javaCwiczenia2020.domain.guest.GuestService;
+import pl.javaCwiczenia2020.domain.reservation.ReservationService;
 import pl.javaCwiczenia2020.domain.room.Room;
 import pl.javaCwiczenia2020.domain.room.RoomService;
 import pl.javaCwiczenia2020.domain.util.Properties;
 import pl.javaCwiczenia2020.exceptions.OnlyNumberException;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
+import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,6 +18,7 @@ public class TextUI {
 
     private final GuestService guestService = new GuestService();
     private final RoomService roomService = new RoomService();
+    private final ReservationService reservationService = new ReservationService();
 
     private void readNewGuestData(Scanner scanner) {
         System.out.println("Wybrano opcję 1 - dodaj nowego gościa");
@@ -100,6 +103,7 @@ public class TextUI {
         System.out.println("Ładowanie danych...");
         this.guestService.readAll();
         this.roomService.readAll();
+        this.reservationService.readAll();
         Scanner scanner = new Scanner(System.in);
 
         try {
@@ -128,10 +132,21 @@ public class TextUI {
                 displayGuestList();
             } else if (option == 4) {
                 displayRoomList();
+            } else if (option == 5) {
+                removeGuest(scanner);
+            } else if (option == 6) {
+                removeRoom(scanner);
+            } else if (option == 7) {
+                editGuest(scanner);
+            } else if (option == 8) {
+                editRoom(scanner);
+            } else if (option == 9) {
+              createReservation(scanner);
             } else if (option == 0) {
                 System.out.println("Koniec");
                 this.guestService.saveAll();
                 this.roomService.saveAll();
+                this.reservationService.saveAll();
             } else {
                 throw new WrongOptionException("Wrong option in main menu");
             }
@@ -145,6 +160,11 @@ public class TextUI {
         System.out.println("2 - Dodaj nowy pokój");
         System.out.println("3 - Wypisz wszystkich gości");
         System.out.println("4 - Wypisz pokoje");
+        System.out.println("5 - Usuń gośca");
+        System.out.println("6 - Usuń pokój");
+        System.out.println("7 - Edytuj dane gościa");
+        System.out.println("8 - Edytuj dane pokoju");
+        System.out.println("9 - Stwórz rezerwację");
         System.out.println("0 - Wyjście z aplikacji. Zapis danych.");
         System.out.println("Podaj numer opcji z menu...");
 
@@ -153,7 +173,7 @@ public class TextUI {
         try {
             option = scanner.nextInt();
         } catch (InputMismatchException e) {
-            throw new OnlyNumberException("Wrong data - characters instead of numbersin getUserOption function");
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in getUserOption function");
         }
         return option;
     }
@@ -170,8 +190,93 @@ public class TextUI {
         for (Guest guest : guestService.getGuestList()) {
             System.out.println(guest.getInfo());
         }
+    }
+
+    private void removeGuest(Scanner scanner){
+        System.out.println("Podaj id gościa do usunięcia");
+
+        try {
+            int id = scanner.nextInt();
+            this.guestService.remove(id);
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in removeGuest function");
+        }
+
 
     }
+
+    private void removeRoom(Scanner scanner){
+        System.out.println("Podaj id pokoju do usunięcia");
+
+        try {
+            int id = scanner.nextInt();
+            this.roomService.remove(id);
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in removeRoom function");
+        }
+    }
+
+    private void editGuest(Scanner scanner) {
+
+        System.out.println("Podaj id gościa do  edycji");
+
+        try {
+            int id = scanner.nextInt();
+            System.out.println("Podaj imię");
+            String name = scanner.next();
+            System.out.println("Podaj nazwisko");
+            String lastName = scanner.next();
+            System.out.println("Podaj wiek");
+            int age = scanner.nextInt();
+            Gender gender = guestService.getGender(readGenderData(scanner));
+            this.guestService.edit(id, name, lastName, age, gender);
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in editGuest function");
+        }
+    }
+
+    private void editRoom(Scanner scanner) {
+
+        System.out.println("Podaj id pokoju do edycji");
+
+        try {
+            int id = scanner.nextInt();
+            System.out.println("Podaj numer pokoju");
+            int number = scanner.nextInt();
+            int[] bedTypes = bedTypesData(scanner);
+            this.roomService.edit(id, number, bedTypes);
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in editRoom function");
+        }
+
+
+    }
+
+    private void createReservation(Scanner scanner) {
+        System.out.println("Podaj datę początku rezerwacji (DD.MM.YYYY");
+
+        try {
+            String dateFromAsString = scanner.next();
+            LocalDate dateFrom = LocalDate.parse(dateFromAsString, Properties.DATE_FORMATER);
+            System.out.println("Podaj datę końca rezerwacji (DD.MM.YYYY");
+            String dateToAsString = scanner.next();
+            LocalDate dateTo = LocalDate.parse(dateToAsString, Properties.DATE_FORMATER);
+            System.out.println("Podaj id gościa");
+            int guestId = scanner.nextInt();
+            System.out.println("Podaj id pokoju");
+            int roomId = scanner.nextInt();
+
+            try {
+                this.reservationService.createNewReservation(dateFrom, dateTo, guestId, roomId);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Niepoprawne wprowadzenie dat");
+            }
+
+        } catch (InputMismatchException e) {
+            throw new OnlyNumberException("Wrong data - characters instead of numbers in createReservation function");
+        }
+    }
+
 }
 
 

@@ -2,10 +2,12 @@ package pl.javaCwiczenia2020.domain.room;
 
 public class Room {
 
+    private final int id;
     private final int number;
     private final BedType[] bedType;
 
-    Room(int number, BedType[] bedTypes) {
+    Room(int id, int number, BedType[] bedTypes) {
+        this.id = id;
         this.number = number;
         this.bedType = bedTypes;
     }
@@ -15,7 +17,10 @@ public class Room {
         for (int i = 0; i < bedType.length; i++) {
             info.append("\n").append((i + 1)).append(" ").append(bedType[i]);
         }
-        return String.format("Pokój nr: %d \nz %d łóżkami: ", this.number, this.bedType.length) + info;
+        return String.format("%d Pokój nr: %d \nz %d łóżkami: ",
+                this.id,
+                this.number,
+                this.bedType.length) + info;
     }
 
     public String toCSV() {
@@ -29,6 +34,14 @@ public class Room {
         }
         String bedTypesData = String.join("#", bedTypesStringArray);
 
-        return String.format("%d,%s%s", this.number, bedTypesData, System.getProperty("line.separator"));
+        return String.format("%d,%d,%s%s",
+                this.id,
+                this.number,
+                bedTypesData,
+                System.getProperty("line.separator"));
+    }
+
+    public int getId() {
+        return this.id;
     }
 }

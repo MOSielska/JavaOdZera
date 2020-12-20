@@ -17,7 +17,14 @@ public class GuestRepository {
 
     Guest createNewGuest(String firstName, String lastName, int age, Gender gender) {
 
-        Guest newGuest = new Guest(firstName, lastName, age, gender);
+        Guest newGuest = new Guest(findNewId(), firstName, lastName, age, gender);
+        guestList.add(newGuest);
+        return newGuest;
+    }
+
+    Guest addExistingGuest(int id, String firstName, String lastName, int age, Gender gender) {
+
+        Guest newGuest = new Guest(id, firstName, lastName, age, gender);
         guestList.add(newGuest);
         return newGuest;
     }
@@ -51,21 +58,64 @@ public class GuestRepository {
 
         Path file = Paths.get((Properties.DIRECTORY_PATH).toString(), fileName);
 
+        if(!Files.exists(file)) {
+            return;
+        }
+
+
         try {
             String data = Files.readString(file, StandardCharsets.UTF_8);
             String[] guestList =  data.split(System.getProperty("line.separator"));
 
             for (String guestInfo : guestList) {
                 String[] guestData = guestInfo.split(",");
-                int age =  Integer.parseInt(guestData[2]);
-                Gender gender = Gender.valueOf(guestData[3]);
+                if((guestData[0] == null) || guestData[0].trim().isEmpty()) {
+                    continue;
+                }
+                int id = Integer.parseInt(guestData[0]);
+                int age =  Integer.parseInt(guestData[3]);
+                Gender gender = Gender.valueOf(guestData[4]);
 
-                createNewGuest(guestData[0], guestData[1], age, gender);
+                addExistingGuest(id, guestData[1], guestData[2], age, gender);
             }
 
         } catch (IOException e) {
             throw new ReadWriteFileException(Properties.DIRECTORY_PATH.toString(), "read", "guests file");
         }
+    }
+
+    private int findNewId() {
+        int max = 0;
+
+        for (Guest guest : this.guestList) {
+            if(guest.getId()>max) {
+                max = guest.getId();
+            }
+        }
+        return max + 1;
+    }
+
+    void remove(int id) {
+
+        for (Guest guest : guestList) {
+            if (guest.getId() == id) guestList.remove(guest);
+        }
+    }
+
+    void edit(int id, String firstName, String lastName, int age, Gender gender) {
+
+        this.remove(id);
+        this.addExistingGuest(id, firstName, lastName, age, gender);
+
+    }
+
+    Guest getGuestById(int id) {
+
+        Guest foundGuest = null;
+        for (Guest guest : guestList) {
+            if(guest.getId() == id) foundGuest = guest;
+        }
+        return foundGuest;
     }
 }
 

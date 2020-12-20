@@ -30,4 +30,17 @@ public class GuestService {
     public void readAll() {
         this.repo.readAll();
     }
+
+    public void remove(int id) {
+        this.repo.remove(id);
+    }
+
+    public void edit(int id, String firstName, String lastName, int age, Gender gender) {
+        this.repo.edit(id, firstName, lastName, age, gender);
+    }
+
+    public Guest getGuestById(int id) {
+        return this.repo.getGuestById(id);
+    }
+
 }
