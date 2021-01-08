@@ -1,5 +1,6 @@
 package pl.javaCwiczenia2020.ui.text;
 
+import pl.javaCwiczenia2020.domain.ObjectPool;
 import pl.javaCwiczenia2020.domain.guest.Gender;
 import pl.javaCwiczenia2020.domain.guest.Guest;
 import pl.javaCwiczenia2020.domain.guest.GuestService;
@@ -16,9 +17,10 @@ import java.util.Scanner;
 
 public class TextUI {
 
-    private final GuestService guestService = new GuestService();
-    private final RoomService roomService = new RoomService();
-    private final ReservationService reservationService = new ReservationService();
+    private final GuestService guestService = ObjectPool.getGuestService();
+    private final RoomService roomService = ObjectPool.getRoomService();
+    private final ReservationService reservationService = ObjectPool.getReservationService();
+
 
     private void readNewGuestData(Scanner scanner) {
         System.out.println("Wybrano opcję 1 - dodaj nowego gościa");
@@ -100,10 +102,6 @@ public class TextUI {
 
     public void showMainMenu(){
 
-        System.out.println("Ładowanie danych...");
-        this.guestService.readAll();
-        this.roomService.readAll();
-        this.reservationService.readAll();
         Scanner scanner = new Scanner(System.in);
 
         try {

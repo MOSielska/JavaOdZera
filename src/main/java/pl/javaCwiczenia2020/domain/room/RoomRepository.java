@@ -14,6 +14,11 @@ import java.util.List;
 public class RoomRepository {
 
     private final List<Room> roomList = new ArrayList<>();
+    private final static RoomRepository instance = new RoomRepository();
+
+    private RoomRepository() {
+
+    }
 
     Room createNewRoom(int number, BedType[] bedTypes) {
 
@@ -122,4 +127,7 @@ public class RoomRepository {
         return foundRoom;
     }
 
+    public static RoomRepository getInstance() {
+        return instance;
+    }
 }

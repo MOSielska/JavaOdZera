@@ -1,5 +1,6 @@
 package pl.javaCwiczenia2020.domain.reservation;
 
+import pl.javaCwiczenia2020.domain.ObjectPool;
 import pl.javaCwiczenia2020.domain.guest.Guest;
 import pl.javaCwiczenia2020.domain.guest.GuestService;
 import pl.javaCwiczenia2020.domain.room.Room;
@@ -19,8 +20,13 @@ import java.util.List;
 public class ReservationRepository {
 
     private List<Reservation> reservationList = new ArrayList<>();
-    GuestService guestService = new GuestService();
-    RoomService roomService = new RoomService();
+    GuestService guestService = ObjectPool.getGuestService();
+    RoomService roomService = ObjectPool.getRoomService();
+    private static final ReservationRepository instance = new ReservationRepository();
+
+    private ReservationRepository(){
+
+    }
 
 
      Reservation createNewReservation(Guest guest, Room room, LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -40,7 +46,7 @@ public class ReservationRepository {
 
     void saveAll() {
 
-         String fileName = "reservations.csv";
+        String fileName = "reservations.csv";
 
         Path file = Paths.get(Properties.DIRECTORY_PATH.toString(), fileName);
 
@@ -58,7 +64,7 @@ public class ReservationRepository {
 
     void readAll() {
 
-        String fileName = "reservation.csv";
+        String fileName = "reservations.csv";
 
         Path file = Paths.get(Properties.DIRECTORY_PATH.toString(), fileName);
 
@@ -107,4 +113,12 @@ public class ReservationRepository {
         return max + 1;
     }
 
+    public List<Reservation> getAll() {
+
+        return this.reservationList;
+    }
+
+    public static ReservationRepository getInstance() {
+        return instance;
+    }
 }

@@ -1,6 +1,7 @@
 package pl.javaCwiczenia2020.domain.reservation;
 
 import pl.javaCwiczenia2020.domain.guest.Guest;
+import pl.javaCwiczenia2020.domain.reservation.dto.ReservationDTO;
 import pl.javaCwiczenia2020.domain.room.Room;
 
 import java.time.LocalDateTime;
@@ -34,5 +35,17 @@ public class Reservation {
 
     public int getId() {
         return this.id;
+    }
+
+    public ReservationDTO convertToDTO() {
+
+        ReservationDTO resDTO = new ReservationDTO( this.id,
+                                                    this.guest.getId(),
+                                                    this.guest.getName(),
+                                                    this.room.getId(),
+                                                    this.room.getNumber(),
+                                                    this.dateFrom,
+                                                    this.dateTo);
+        return resDTO;
     }
 }

@@ -1,13 +1,22 @@
 package pl.javaCwiczenia2020.domain.guest;
 
+import pl.javaCwiczenia2020.domain.ObjectPool;
+import pl.javaCwiczenia2020.domain.guest.dto.GuestDTO;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuestService {
 
-    private final GuestRepository repo = new GuestRepository();
+    private final GuestRepository repo = ObjectPool.getGuestRepository();
+    private final static GuestService instance = new GuestService();
+
+    private GuestService() {
+
+    }
 
     public Guest createNewGuest(String firstName, String lastName, int age, Gender gender) {
-        return this.repo.createNewGuest(firstName, lastName, age, gender);
+        return repo.createNewGuest(firstName, lastName, age, gender);
     }
 
     public Gender getGender(boolean isFemale){
@@ -20,27 +29,42 @@ public class GuestService {
 
     public List<Guest> getGuestList() {
 
-        return this.repo.getAll();
+        return repo.getAll();
     }
 
     public void saveAll() {
-        this.repo.saveAll();
+        repo.saveAll();
     }
 
     public void readAll() {
-        this.repo.readAll();
+        repo.readAll();
     }
 
     public void remove(int id) {
-        this.repo.remove(id);
+        repo.remove(id);
     }
 
     public void edit(int id, String firstName, String lastName, int age, Gender gender) {
-        this.repo.edit(id, firstName, lastName, age, gender);
+        repo.edit(id, firstName, lastName, age, gender);
     }
 
     public Guest getGuestById(int id) {
-        return this.repo.getGuestById(id);
+        return repo.getGuestById(id);
     }
 
+    public List<GuestDTO> getGuestDTOList() {
+
+        List<Guest> guestList = repo.getAll();
+        List<GuestDTO> guestDTOList = new ArrayList<>();
+
+        for (Guest guest : guestList) {
+            guestDTOList.add(guest.convertToDTO());
+        }
+
+        return guestDTOList;
+    }
+
+    public static GuestService getInstance() {
+        return instance;
+    }
 }

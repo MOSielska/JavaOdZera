@@ -1,12 +1,30 @@
 package pl.javaCwiczenia2020.domain.room;
 
+import pl.javaCwiczenia2020.domain.ObjectPool;
+import pl.javaCwiczenia2020.domain.room.dto.RoomDTO;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomService {
 
-    private static final RoomRepository repo = new RoomRepository();
+    private  final RoomRepository repo = ObjectPool.getRoomRepository();
+    private static RoomService instance = new RoomService();
+
+    private RoomService() {
+
+    }
+
+    public Room createNewRoom(int number, List<String> bedTypeList) {
+
+        BedType[] bedTypes = new BedType[bedTypeList.size()];
+
+        for(int i = 0; i < bedTypeList.size(); i++) {
+            bedTypes[i] = BedType.valueOf(bedTypeList.get(i));
+        }
+        return repo.createNewRoom(number, bedTypes);
+    }
 
     public Room createNewRoom(int number, int[] bedTypesData) {
 
@@ -26,24 +44,24 @@ public class RoomService {
             bedTypes[i] = tempBed;
 
         }
-            return this.repo.createNewRoom(number, bedTypes);
+            return repo.createNewRoom(number, bedTypes);
     }
 
     public List<Room> getRoomList() {
 
-        return this.repo.getAll();
+        return repo.getAll();
     }
 
     public void saveAll() {
-        this.repo.saveAll();
+        repo.saveAll();
     }
 
     public void readAll() {
-        this.repo.readAll();
+        repo.readAll();
     }
 
     public void remove(int id) {
-        this.repo.remove(id);
+        repo.remove(id);
     }
 
     public void edit(int id, int number, int[] bedTypesData) {
@@ -62,10 +80,27 @@ public class RoomService {
             }
             bedTypes[i] = tempBed;
         }
-        this.repo.edit(id, number, bedTypes);
+        repo.edit(id, number, bedTypes);
     }
 
     public Room getRoomById(int id) {
-        return this.repo.getRoomById(id);
+        return repo.getRoomById(id);
+    }
+
+    public List<RoomDTO> getRoomDTOList() {
+
+        List<RoomDTO> bedDTOList = new ArrayList<>();
+        List<Room> bedList = repo.getAll();
+
+        for (Room room : bedList) {
+            RoomDTO roomDTO = room.convertToDTO();
+            bedDTOList.add(roomDTO);
+        }
+
+        return bedDTOList;
+    }
+
+    public static RoomService getInstance() {
+        return instance;
     }
 }

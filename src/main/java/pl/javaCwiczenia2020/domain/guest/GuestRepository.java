@@ -14,6 +14,11 @@ import java.util.List;
 public class GuestRepository {
 
     private final List<Guest> guestList = new ArrayList<>();
+    private final static GuestRepository instance = new GuestRepository();
+
+    private GuestRepository() {
+
+    }
 
     Guest createNewGuest(String firstName, String lastName, int age, Gender gender) {
 
@@ -22,7 +27,7 @@ public class GuestRepository {
         return newGuest;
     }
 
-    Guest addExistingGuest(int id, String firstName, String lastName, int age, Gender gender) {
+    private Guest addExistingGuest(int id, String firstName, String lastName, int age, Gender gender) {
 
         Guest newGuest = new Guest(id, firstName, lastName, age, gender);
         guestList.add(newGuest);
@@ -116,6 +121,10 @@ public class GuestRepository {
             if(guest.getId() == id) foundGuest = guest;
         }
         return foundGuest;
+    }
+
+    public static GuestRepository getInstance() {
+        return instance;
     }
 }
 

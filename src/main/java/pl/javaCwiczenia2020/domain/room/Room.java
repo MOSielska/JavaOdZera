@@ -1,5 +1,7 @@
 package pl.javaCwiczenia2020.domain.room;
 
+import pl.javaCwiczenia2020.domain.room.dto.RoomDTO;
+
 public class Room {
 
     private final int id;
@@ -43,5 +45,24 @@ public class Room {
 
     public int getId() {
         return this.id;
+    }
+
+    public RoomDTO convertToDTO(){
+
+        StringBuilder bedList = new StringBuilder();
+
+        int roomSize = 0;
+        for (BedType bedType : this.bedType) {
+            bedList.append(bedType.toString()).append(",");
+            roomSize += bedType.getSize();
+        }
+
+        RoomDTO roomDTO = new RoomDTO(this.id, this.number, bedList.toString(), bedType.length, roomSize);
+
+        return roomDTO;
+    }
+
+    public int getNumber() {
+        return this.number;
     }
 }
