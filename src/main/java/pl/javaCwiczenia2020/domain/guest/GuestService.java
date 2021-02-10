@@ -40,15 +40,15 @@ public class GuestService {
         repo.readAll();
     }
 
-    public void remove(int id) {
+    public void remove(long id) {
         repo.remove(id);
     }
 
-    public void edit(int id, String firstName, String lastName, int age, Gender gender) {
+    public void edit(long id, String firstName, String lastName, int age, Gender gender) {
         repo.edit(id, firstName, lastName, age, gender);
     }
 
-    public Guest getGuestById(int id) {
+    public Guest getGuestById(long id) {
         return repo.getGuestById(id);
     }
 

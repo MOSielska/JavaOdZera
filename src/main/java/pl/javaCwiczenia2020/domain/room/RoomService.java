@@ -5,6 +5,7 @@ import pl.javaCwiczenia2020.domain.room.dto.RoomDTO;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RoomService {
@@ -18,12 +19,17 @@ public class RoomService {
 
     public Room createNewRoom(int number, List<String> bedTypeList) {
 
-        BedType[] bedTypes = new BedType[bedTypeList.size()];
-
-        for(int i = 0; i < bedTypeList.size(); i++) {
-            bedTypes[i] = BedType.valueOf(bedTypeList.get(i));
-        }
+        List<BedType> bedTypes = getBedTypes(bedTypeList);
         return repo.createNewRoom(number, bedTypes);
+    }
+
+    private List<BedType> getBedTypes(List<String> bedTypeList) {
+        List<BedType> bedTypes = new ArrayList<>();
+
+        for(String bed : bedTypeList) {
+            bedTypes.add(BedType.valueOf(bed));
+        }
+        return bedTypes;
     }
 
     public Room createNewRoom(int number, int[] bedTypesData) {
@@ -44,7 +50,7 @@ public class RoomService {
             bedTypes[i] = tempBed;
 
         }
-            return repo.createNewRoom(number, bedTypes);
+            return repo.createNewRoom(number, Arrays.asList(bedTypes));
     }
 
     public List<Room> getRoomList() {
@@ -60,11 +66,11 @@ public class RoomService {
         repo.readAll();
     }
 
-    public void remove(int id) {
+    public void remove(long id) {
         repo.remove(id);
     }
 
-    public void edit(int id, int number, int[] bedTypesData) {
+    public void edit(long id, int number, int[] bedTypesData) {
 
         BedType[] bedTypes = new BedType[bedTypesData.length];
 
@@ -80,10 +86,16 @@ public class RoomService {
             }
             bedTypes[i] = tempBed;
         }
-        repo.edit(id, number, bedTypes);
+        repo.edit(id, number, Arrays.asList(bedTypes));
     }
 
-    public Room getRoomById(int id) {
+    public void edit(long id, int number, List<String> bedTypeList) {
+
+        List<BedType> bedTypes = getBedTypes(bedTypeList);
+        this.repo.edit(id, number, bedTypes);
+    }
+
+    public Room getRoomById(long id) {
         return repo.getRoomById(id);
     }
 

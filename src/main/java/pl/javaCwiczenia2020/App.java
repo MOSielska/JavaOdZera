@@ -6,7 +6,7 @@ import pl.javaCwiczenia2020.domain.ObjectPool;
 import pl.javaCwiczenia2020.domain.guest.GuestService;
 import pl.javaCwiczenia2020.domain.reservation.ReservationService;
 import pl.javaCwiczenia2020.domain.room.RoomService;
-import pl.javaCwiczenia2020.domain.util.Properties;
+import pl.javaCwiczenia2020.domain.util.SystemUtils;
 import pl.javaCwiczenia2020.exceptions.ReadWriteFileException;
 import pl.javaCwiczenia2020.ui.gui.PrimaryStage;
 import pl.javaCwiczenia2020.ui.text.TextUI;
@@ -23,14 +23,16 @@ public class App extends Application {
     public static void main(String[] args) {
 
         try {
-            Properties.createDataDirectory();
+            SystemUtils su = new SystemUtils();
+            SystemUtils.createDataDirectory();
+            su.createDatabaseConnection();
             System.out.println("Ładowanie danych...");
             guestService.readAll();
             roomService.readAll();
             reservationService.readAll();
 
         } catch (IOException e) {
-            throw new ReadWriteFileException(Properties.DIRECTORY_PATH.toString(), "create", "directory");
+            throw new ReadWriteFileException(SystemUtils.DIRECTORY_PATH.toString(), "create", "directory");
         }
  //       textUI.showSystemInfo();
  //       textUI.showMainMenu();

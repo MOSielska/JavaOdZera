@@ -2,6 +2,9 @@ package pl.javaCwiczenia2020.ui.gui;
 
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import pl.javaCwiczenia2020.ui.gui.guests.GuestTab;
+import pl.javaCwiczenia2020.ui.gui.reservations.ReservationTab;
+import pl.javaCwiczenia2020.ui.gui.rooms.RoomTab;
 
 public class MainTabView {
 

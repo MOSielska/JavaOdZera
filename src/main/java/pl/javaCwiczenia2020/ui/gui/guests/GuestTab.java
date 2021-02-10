@@ -1,9 +1,7 @@
-package pl.javaCwiczenia2020.ui.gui;
+package pl.javaCwiczenia2020.ui.gui.guests;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -16,9 +14,11 @@ public class GuestTab {
 
     private Tab guestTab;
     private GuestService guestService = ObjectPool.getGuestService();
+    private Stage primaryStage;
 
     public GuestTab(Stage primaryStage) {
 
+        this.primaryStage = primaryStage;
         Button addNewGuestButton = new Button("Dodaj nowy");
 
         TableView<GuestDTO> tableView = getGuestDTOTableView();
@@ -50,8 +50,41 @@ public class GuestTab {
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         TableColumn<GuestDTO, String> genderColumn = new TableColumn<>("Płeć");
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        TableColumn<GuestDTO, GuestDTO> deleteColumn = new TableColumn<>();
+        deleteColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper(value.getValue()));
+        deleteColumn.setCellFactory( param -> new TableCell<>() {
 
-        tableView.getColumns().addAll(firstNameColumn, lastNameColumn, ageColumn, genderColumn);
+            Button deleteButton = new Button("Usuń");
+            Button editButton = new Button("Edytuj");
+            VBox buttons = new VBox(deleteButton, editButton);
+
+            @Override
+            protected void updateItem(GuestDTO value, boolean empty) {
+                super.updateItem(value, empty);
+
+                if(value == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(buttons);
+                    deleteButton.setOnAction(ActionEvent -> {
+                        guestService.remove(value.getId());
+                        tableView.getItems().remove(value);
+                    });
+
+                    editButton.setOnAction(ActionEvent -> {
+                        Stage editWindow = new Stage();
+                        editWindow.initModality(Modality.WINDOW_MODAL);
+                        editWindow.initOwner(primaryStage);
+                        editWindow.setScene(new EditGuestScene(editWindow, tableView, value).getMainScene());
+                        editWindow.setTitle("Edytowanie gaścia");
+                        editWindow.showAndWait();
+                    });
+                }
+            }
+        });
+
+
+        tableView.getColumns().addAll(firstNameColumn, lastNameColumn, ageColumn, genderColumn, deleteColumn);
         tableView.getItems().addAll(guestService.getGuestDTOList());
         return tableView;
     }

@@ -1,4 +1,4 @@
-package pl.javaCwiczenia2020.ui.gui;
+package pl.javaCwiczenia2020.ui.gui.reservations;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

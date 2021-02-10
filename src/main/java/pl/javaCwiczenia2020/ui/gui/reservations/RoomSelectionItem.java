@@ -1,16 +1,16 @@
-package pl.javaCwiczenia2020.ui.gui;
+package pl.javaCwiczenia2020.ui.gui.reservations;
 
 public class RoomSelectionItem {
 
-    private int id;
+    private long id;
     private int number;
 
-    public RoomSelectionItem(int id, int number) {
+    public RoomSelectionItem(long id, int number) {
         this.id = id;
         this.number = number;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 public class ReservationDTO {
 
-    private final int id;
-    private final int guestId;
+    private final long id;
+    private final long guestId;
     private final String guestName;
-    private final int roomId;
+    private final long roomId;
     private final int roomNumber;
     private final LocalDateTime dateFrom;
     private final LocalDateTime dateTo;
 
-    public ReservationDTO(int id, int guestId, String guestName, int roomId, int roomNumber, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    public ReservationDTO(long id, long guestId, String guestName, long roomId, int roomNumber, LocalDateTime dateFrom, LocalDateTime dateTo) {
         this.id = id;
         this.guestId = guestId;
         this.guestName = guestName;
@@ -22,11 +22,11 @@ public class ReservationDTO {
         this.dateTo = dateTo;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getGuestId() {
+    public long getGuestId() {
         return guestId;
     }
 
@@ -34,7 +34,7 @@ public class ReservationDTO {
         return guestName;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 

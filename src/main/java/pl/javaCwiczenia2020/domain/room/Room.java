@@ -2,35 +2,37 @@ package pl.javaCwiczenia2020.domain.room;
 
 import pl.javaCwiczenia2020.domain.room.dto.RoomDTO;
 
+import java.util.List;
+
 public class Room {
 
-    private final int id;
-    private final int number;
-    private final BedType[] bedType;
+    private final long id;
+    private  int number;
+    private  List<BedType> beds;
 
-    Room(int id, int number, BedType[] bedTypes) {
+    Room(long id, int number, List<BedType> bedTypes) {
         this.id = id;
         this.number = number;
-        this.bedType = bedTypes;
+        this.beds = bedTypes;
     }
 
     public String getInfo() {
         StringBuilder info = new StringBuilder();
-        for (int i = 0; i < bedType.length; i++) {
-            info.append("\n").append((i + 1)).append(" ").append(bedType[i]);
+        for (int i = 0; i < beds.size(); i++) {
+            info.append("\n").append((i + 1)).append(" ").append(beds.get(i));
         }
         return String.format("%d Pokój nr: %d \nz %d łóżkami: ",
                 this.id,
                 this.number,
-                this.bedType.length) + info;
+                this.beds.size()) + info;
     }
 
     public String toCSV() {
 
-        String [] bedTypesStringArray = new String[this.bedType.length];
+        String [] bedTypesStringArray = new String[this.beds.size()];
 
         int i = 0;
-        for (BedType bedType : this.bedType) {
+        for (BedType bedType : this.beds) {
             bedTypesStringArray[i] = bedType.toString();
             i++;
         }
@@ -43,7 +45,7 @@ public class Room {
                 System.getProperty("line.separator"));
     }
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -52,17 +54,28 @@ public class Room {
         StringBuilder bedList = new StringBuilder();
 
         int roomSize = 0;
-        for (BedType bedType : this.bedType) {
+        for (BedType bedType : this.beds) {
             bedList.append(bedType.toString()).append(",");
             roomSize += bedType.getSize();
         }
 
-        RoomDTO roomDTO = new RoomDTO(this.id, this.number, bedList.toString(), bedType.length, roomSize);
+        return new RoomDTO(this.id, this.number, bedList.toString(), beds.size(), roomSize);
 
-        return roomDTO;
     }
 
     public int getNumber() {
         return this.number;
+    }
+
+    void addBed(BedType bedType) {
+        this.beds.add(bedType);
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public void setBeds(List<BedType> beds) {
+        this.beds = beds;
     }
 }

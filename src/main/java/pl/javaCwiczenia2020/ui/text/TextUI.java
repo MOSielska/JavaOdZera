@@ -7,7 +7,7 @@ import pl.javaCwiczenia2020.domain.guest.GuestService;
 import pl.javaCwiczenia2020.domain.reservation.ReservationService;
 import pl.javaCwiczenia2020.domain.room.Room;
 import pl.javaCwiczenia2020.domain.room.RoomService;
-import pl.javaCwiczenia2020.domain.util.Properties;
+import pl.javaCwiczenia2020.domain.util.SystemUtils;
 import pl.javaCwiczenia2020.exceptions.OnlyNumberException;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
@@ -94,9 +94,9 @@ public class TextUI {
 
 
     public void showSystemInfo() {
-        System.out.println("Witam w systemie rezerwacji dla hotelu " + Properties.HOTEL_NAME);
-        System.out.println("Aktualna wersja systemu: " + Properties.SYSTEM_VERSION);
-        System.out.println("Wersja developerska: " + Properties.IS_DEVELOPER_VERSION);
+        System.out.println("Witam w systemie rezerwacji dla hotelu " + SystemUtils.HOTEL_NAME);
+        System.out.println("Aktualna wersja systemu: " + SystemUtils.SYSTEM_VERSION);
+        System.out.println("Wersja developerska: " + SystemUtils.IS_DEVELOPER_VERSION);
     }
 
 
@@ -255,10 +255,10 @@ public class TextUI {
 
         try {
             String dateFromAsString = scanner.next();
-            LocalDate dateFrom = LocalDate.parse(dateFromAsString, Properties.DATE_FORMATER);
+            LocalDate dateFrom = LocalDate.parse(dateFromAsString, SystemUtils.DATE_FORMATER);
             System.out.println("Podaj datę końca rezerwacji (DD.MM.YYYY");
             String dateToAsString = scanner.next();
-            LocalDate dateTo = LocalDate.parse(dateToAsString, Properties.DATE_FORMATER);
+            LocalDate dateTo = LocalDate.parse(dateToAsString, SystemUtils.DATE_FORMATER);
             System.out.println("Podaj id gościa");
             int guestId = scanner.nextInt();
             System.out.println("Podaj id pokoju");

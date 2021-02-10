@@ -1,18 +1,18 @@
-package pl.javaCwiczenia2020.ui.gui;
+package pl.javaCwiczenia2020.ui.gui.reservations;
 
 public class GuestSelectionItem {
 
-    private int id;
+    private long id;
     private String firstName;
     private String lastName;
 
-    public GuestSelectionItem(int id, String firstName, String lastName) {
+    public GuestSelectionItem(long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

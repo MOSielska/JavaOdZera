@@ -1,9 +1,7 @@
-package pl.javaCwiczenia2020.ui.gui;
+package pl.javaCwiczenia2020.ui.gui.reservations;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -50,8 +48,30 @@ public class ReservationTab {
         roomColumn.setCellValueFactory(new PropertyValueFactory<>("roomNumber"));
         TableColumn<ReservationDTO, Integer> guestColumn = new TableColumn<>("Rezerwujący");
         guestColumn.setCellValueFactory(new PropertyValueFactory<>("guestName"));
+        TableColumn<ReservationDTO, ReservationDTO> deleteColumn = new TableColumn<>("Usuń");
+        deleteColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper(value.getValue()));
+        deleteColumn.setCellFactory( param -> new TableCell<>() {
 
-        tableView.getColumns().addAll(fromColumn, toColumn, roomColumn, guestColumn);
+            Button deleteButton = new Button("Usuń");
+
+            @Override
+            protected void updateItem(ReservationDTO value, boolean empty) {
+                super.updateItem(value, empty);
+
+                if(value == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    deleteButton.setOnAction(ActionEvent -> {
+                        reservationService.remove(value.getId());
+                        tableView.getItems().remove(value);
+                    });
+                }
+            }
+        });
+
+
+        tableView.getColumns().addAll(fromColumn, toColumn, roomColumn, guestColumn, deleteColumn);
         tableView.getItems().addAll(reservationService.getReservationDTOList());
         return tableView;
     }

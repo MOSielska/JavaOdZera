@@ -1,0 +1,76 @@
+package pl.javaCwiczenia2020.domain.util;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.format.DateTimeFormatter;
+import java.util.Properties;
+
+public class SystemUtils {
+
+    private static final Properties props = new Properties();
+
+    public static final String HOTEL_NAME = "Overloock";
+    public static String SYSTEM_VERSION;
+    public static final boolean IS_DEVELOPER_VERSION = true;
+
+    public static final DateTimeFormatter DATE_FORMATER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static final int HOTEL_NIGHT_START_HOUR = 15;
+    public static final int HOTEL_NIGHT_START_MINUTE = 0;
+    public static final int HOTEL_NIGHT_END_HOUR = 10;
+    public static final int HOTEL_NIGHT_END_MINUTE = 0;
+
+    public static final String SINGLE_BED = "SINGLE";
+    public static final String DOBBLE_BED = "DOBBLE";
+    public static final String KING_SIZE_BED = "KING_SIZE";
+
+    public static final String FEMALE = "Żeńska";
+    public static final  String MALE = "Męska";
+
+    public static Connection connection;
+
+
+    public static final Path DIRECTORY_PATH = Paths.get(
+            System.getProperty("user.home"),
+            "reservation_system");
+
+    public static void createDataDirectory() throws IOException {
+        if(!Files.exists(DIRECTORY_PATH)) {
+            Files.createDirectory(DIRECTORY_PATH);
+        }
+    }
+
+    public SystemUtils() {
+        try {
+            this.props.load(this.getClass().getClassLoader().getResourceAsStream(".properties"));
+            SystemUtils.SYSTEM_VERSION = props.get("system.version").toString();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createDatabaseConnection() {
+        try {
+            Class.forName("org.h2.Driver");
+            connection = DriverManager.getConnection("jdbc:h2:~/reservationSystem", "test", "");
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS ROOMS(ID INT PRIMARY KEY AUTO_INCREMENT, ROOM_NUMBER INT NOT NULL UNIQUE)");
+            statement.execute("CREATE TABLE IF NOT EXISTS BEDS(ID INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "ROOM_ID INT NOT NULL, BED VARCHAR2(55), FOREIGN KEY (ROOM_ID) REFERENCES ROOMS(ID))");
+            statement.execute("CREATE TABLE IF NOT EXISTS GUESTS(ID INT PRIMARY KEY AUTO_INCREMENT, FIRST_NAME VARCHAR2(100) NOT NULL," +
+                    "LAST_NAME VARCHAR2(100) NOT NULL, AGE INT NOT NULL, GENDER VARCHAR2(25) NOT NULL)");
+            statement.execute("CREATE TABLE IF NOT EXISTS RESERVATIONS(ID INT PRIMARY KEY AUTO_INCREMENT, ROOM_ID INT NOT NULL," +
+                    " GUEST_ID INT NOT NULL, DATE_FROM SMALLDATETIME NOT NULL, DATE_TO SMALLDATETIME NOT NULL, " +
+                    "FOREIGN KEY (ROOM_ID) REFERENCES ROOMS(ID), FOREIGN KEY (GUEST_ID) REFERENCES GUESTS(ID))");
+            System.out.println("Udao sie nawiazac polaczenie z baza danych.");
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Blad przy tworzeniu polaczenia z baza danych " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
