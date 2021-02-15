@@ -39,7 +39,7 @@ public class RoomFileRepository implements RoomRepository {
         return newRoom;
     }
 
-    public List<Room> getAll() {
+    public List<Room> getAllRooms() {
         return this.rooms;
     }
 

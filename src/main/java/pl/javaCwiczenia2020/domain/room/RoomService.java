@@ -5,7 +5,6 @@ import pl.javaCwiczenia2020.domain.room.dto.RoomDTO;
 import pl.javaCwiczenia2020.exceptions.WrongOptionException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RoomService {
@@ -32,30 +31,37 @@ public class RoomService {
         return bedTypes;
     }
 
-    public Room createNewRoom(int number, int[] bedTypesData) {
+    protected List<BedType> getBedTypes(int[] bedTypeData) {
 
-        BedType[] bedTypes = new BedType[bedTypesData.length];
+        List<BedType> bedTypes = new ArrayList<>();
 
-        for (int i = 0; i < bedTypesData.length; i++) {
+        for (int i = 0; i < bedTypeData.length; i++) {
 
             BedType tempBed;
 
-            if (bedTypesData[i] == 1) tempBed = BedType.SINGLE;
-            else if (bedTypesData[i] == 2) tempBed = BedType.DOBBLE;
-            else if (bedTypesData[i] == 3) tempBed = BedType.KING_SIZE;
+            if (bedTypeData[i] == 1) tempBed = BedType.SINGLE;
+            else if (bedTypeData[i] == 2) tempBed = BedType.DOBBLE;
+            else if (bedTypeData[i] == 3) tempBed = BedType.KING_SIZE;
             else {
                 throw new WrongOptionException("Wrong option in getBedType function");
             }
 
-            bedTypes[i] = tempBed;
+            bedTypes.add(tempBed);
 
         }
-            return repo.createNewRoom(number, Arrays.asList(bedTypes));
+        return bedTypes;
+
+    }
+
+    public Room createNewRoom(int number, int[] bedTypesData) {
+
+        List<BedType> bedTypes = getBedTypes(bedTypesData);
+        return repo.createNewRoom(number, bedTypes);
     }
 
     public List<Room> getRoomList() {
 
-        return repo.getAll();
+        return repo.getAllRooms();
     }
 
     public void saveAll() {
@@ -72,21 +78,9 @@ public class RoomService {
 
     public void edit(long id, int number, int[] bedTypesData) {
 
-        BedType[] bedTypes = new BedType[bedTypesData.length];
+        List<BedType> bedTypes = getBedTypes(bedTypesData);
 
-        for (int i = 0; i < bedTypesData.length; i++) {
-
-            BedType tempBed;
-
-            if (bedTypesData[i] == 1) tempBed = BedType.SINGLE;
-            else if (bedTypesData[i] == 2) tempBed = BedType.DOBBLE;
-            else if (bedTypesData[i] == 3) tempBed = BedType.KING_SIZE;
-            else {
-                throw new WrongOptionException("Wrong option in getBedType function");
-            }
-            bedTypes[i] = tempBed;
-        }
-        repo.edit(id, number, Arrays.asList(bedTypes));
+        repo.edit(id, number, bedTypes);
     }
 
     public void edit(long id, int number, List<String> bedTypeList) {
@@ -102,7 +96,7 @@ public class RoomService {
     public List<RoomDTO> getRoomDTOList() {
 
         List<RoomDTO> bedDTOList = new ArrayList<>();
-        List<Room> bedList = repo.getAll();
+        List<Room> bedList = repo.getAllRooms();
 
         for (Room room : bedList) {
             RoomDTO roomDTO = room.convertToDTO();
